@@ -3,30 +3,17 @@ import { galleryItems } from "./gallery-items.js";
 
 const galleryContainer = document.querySelector(".gallery");
 
-const imgMarcup = addGalleryItems(galleryItems);
-
-function addGalleryItems(galleryItems) {
-  return galleryItems
-    .map(({ preview, original, description }) => {
-      return `<a class="gallery__item" href="${original}">
-  <img class="gallery__image" src="${preview}" alt="${description}" title="${description}" />
+const galleryMarcup = galleryItems
+  .map(({ preview, original, description }) => {
+    return `<a class="gallery__item" href="${original}">
+  <img class="gallery__image" src="${preview}" alt="${description}"/>
 </a>`;
-    })
-    .join("");
-}
+  })
+  .join("");
 
-function galleryItemsHendler(event) {
-  event.preventDefault();
-  if (!event.target.classList.contains("gallery__image")) {
-    return;
-  }
+galleryContainer.insertAdjacentHTML("beforeend", galleryMarcup);
 
-  let gallery = new SimpleLightbox(".gallery a");
-
-  gallery.on("show.simplelightbox", function () {
-    gallery.captionType = 250;
-  });
-}
-
-galleryContainer.insertAdjacentHTML("beforeend", imgMarcup);
-galleryContainer.addEventListener("click", galleryItemsHendler);
+let lightbox = new SimpleLightbox(".gallery a", {
+  captionDelay: 250,
+  captionsData: "alt",
+});

@@ -28,26 +28,24 @@ function galleryItemsHendler(event) {
     return;
   }
 
-  const modal = basicLightbox.create(
+  const instance = basicLightbox.create(
     `<img src="${
       event.target.closest("img").dataset.source
-    }" width="800" height="600">`
+    }" width="800" height="600">`,
+    {
+      onShow: () => document.addEventListener("keydown", onCloseModal),
+      onClose: () => document.removeEventListener("keydown", onCloseModal),
+    }
   );
 
-  console.log(event.target);
-  console.log(modal.show());
+  instance.show();
+
+  function onCloseModal(event) {
+    if (event.code === "Escape") {
+      instance.close();
+    }
+  }
 }
 
 galleryContainer.insertAdjacentHTML("beforeend", imgMarcup);
 galleryContainer.addEventListener("click", galleryItemsHendler);
-
-document.addEventListener("keydown", (evt) => {
-  const pushEscape = evt.code === "Escape";
-  const modalOn = document.querySelector(".basicLightbox");
-  if (!modalOn) {
-    return;
-  }
-  if (pushEscape) {
-    modalOn.remove();
-  }
-});
